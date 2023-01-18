@@ -1,8 +1,10 @@
 package main
 
-import 
-	f "fmt"
-
+import (
+	"fmt"
+	"net/http"
+	"github.com/gin-gonic/gin"
+)
 
 type Person struct {
 	firstName string
@@ -28,12 +30,14 @@ var people = People{
 
 func main() {
 	showPeopleData()
+	creatServer()
 }
 
 
-func showPeopleData() {
-	for i := 0; i < len(people); i++ {
-		var fullName = people[i].firstName +" "+ people[i].lastName
-		f.Printf("person %s has %d years old\n", fullName, people[i].age)
-	}
+func creatServer() {
+	server := gin.Default()
+	server.GET("/home", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{ "data": "Hi from GIN" })
+	})
+	server.Run()
 }
