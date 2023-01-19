@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	_ "fmt"
 	"net/http"
 	"github.com/gin-gonic/gin"
 )
@@ -29,15 +29,24 @@ var people = People{
 
 
 func main() {
-	showPeopleData()
 	creatServer()
 }
 
 
 func creatServer() {
-	server := gin.Default()
-	server.GET("/home", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{ "data": "Hi from GIN" })
-	})
-	server.Run()
+	router := gin.Default()
+	router.GET("/home", homeUseCase)
+
+	router.Run("3000")
+}
+
+func homeUseCase(ctx *gin.Context) {
+	name := ctx.Query("name")
+
+	ctx.JSON(http.StatusOK, gin.H{ "data": homeDataProvider(name)})
+}
+
+
+func homeDataProvider(name string) string {
+	return "Hi there, "+ name+"!"
 }
